@@ -1,5 +1,5 @@
 {
-    "name": "maxparkerunipro/drupal-behat-remote-api-driver",
+    "name": "unipro-danmunn/drupal-behat-remote-api-driver",
     "description": "Driver for remote Behat testing with Drupal",
     "license": "MIT",
     "authors": [
