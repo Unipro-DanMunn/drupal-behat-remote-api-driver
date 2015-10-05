@@ -4,7 +4,9 @@ parameters:
 
   # Drupal driver manager.
   drupal.drupal.class: Kirschbaum\DrupalBehatRemoteAPIDriver\DrupalRemoteApiDriver
+  # drupal.drupal.class: Kirschbaum\DrupalBehatRemoteAPIDriver\DrupalRemoteApiDriverManager
   drupal.drupal.default_session: drupal_remote_api
+  drupal.drupal.api_driver: drush
 
   # Random generator.
   drupal.random.class: Drupal\Component\Utility\Random
@@ -12,23 +14,19 @@ parameters:
   # Context initializer.
   drupal.context.initializer.class: Drupal\DrupalExtension\Context\Initializer\DrupalAwareInitializer
 
-  # Context class guesser.
-  drupal.context.class_guesser.class: Drupal\DrupalExtension\Context\ClassGuesser\DrupalContextClassGuesser
+  # Environment reader.
+  drupal.context.environment.reader.class: Drupal\DrupalExtension\Context\Environment\Reader\Reader
 
-  # Event dispatcher.
-  drupal.event_dispatcher.class: Symfony\Component\EventDispatcher\EventDispatcher
-
-  # Hook dispatcher.
-  drupal.hook.dispatcher.class: Drupal\DrupalExtension\Hook\Dispatcher
+  # Event listeners.
+  drupal.listener.drivers.class: Drupal\DrupalExtension\Listener\DriverListener
 
   # Hook loader.
-  drupal.context.loader.annotated.class: Drupal\DrupalExtension\Context\Loader\Annotated
+  drupal.context.annotation.reader.class: Drupal\DrupalExtension\Context\Annotation\Reader
 
   # Region selector class.
   drupal.context.region_selector.class: Drupal\DrupalExtension\Selector\RegionSelector
 
   # Parameters.
-  drupal.basic_auth: { username: ~, password: ~}
   drupal.parameters: {}
   drupal.region_map: {}
 
@@ -45,31 +43,33 @@ services:
     arguments:
       - @drupal.drupal
       - %drupal.parameters%
-      - @drupal.event_dispatcher
+      - @hook.dispatcher
     tags:
-      - { name: behat.context.initializer }
-      - { name: behat.event_subscriber, priority: 0 }
-  drupal.context.class_guesser:
-    class: %drupal.context.class_guesser.class%
-    tags:
-      - { name: behat.context.class_guesser }
-  drupal.event_dispatcher:
-    class: %drupal.event_dispatcher.class%
-  drupal.hook.dispatcher:
-    class: %drupal.hook.dispatcher.class%
-    tags:
-      - { name: drupal.event_subscriber }
-  drupal.context.loader.annotated:
-    class: %drupal.context.loader.annotated.class%
+      - { name: context.initializer }
+  drupal.context.environment.reader:
+    class: %drupal.context.environment.reader.class%
     arguments:
-      - @drupal.hook.dispatcher
+      - @drupal.drupal
+      - %drupal.parameters%
     tags:
-      - { name: behat.context.loader }
+      - { name: environment.reader }
+  drupal.context.loader.annotated:
+    class: %drupal.context.annotation.reader.class%
+    arguments:
+    tags:
+      - { name: context.annotation_reader }
+  drupal.listener.driver:
+    class: %drupal.listener.drivers.class%
+    arguments:
+      - @drupal.drupal
+      - %drupal.parameters%
+    tags:
+      - { name: event_dispatcher.subscriber, priority: 0 }
   drupal.region_selector:
     class: %drupal.context.region_selector.class%
     arguments:
       # inject the CSSSelector
-      - "@behat.mink.selector.css"
+      - "@mink.selector.css"
       - %drupal.region_map%
     tags:
-      - { name: behat.mink.selector, alias: region }
+      - { name: mink.selector, alias: region }

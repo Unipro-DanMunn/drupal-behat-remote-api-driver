@@ -10,13 +10,12 @@ namespace Kirschbaum\DrupalBehatRemoteAPIDriver;
 
 
 use Drupal\Component\Utility\Random;
-use Drupal\Drupal;
+use Drupal\DrupalDriverManager;
 
-class DrupalRemoteApiDriver extends Drupal {
+class DrupalRemoteApiDriver extends DrupalDriverManager {
 
     public function __construct(array $drivers = array(), Random $random) {
-
-        $this->registerDriver('drupal_remote_api', new \Kirschbaum\DrupalBehatRemoteAPIDriver\Drivers\DrupalBehatRemoteApiDriver());
+        $this->registerDriver('drupal_remote_api', new \Kirschbaum\DrupalBehatRemoteAPIDriver\Drivers\DrupalBehatRemoteApiDriver(NULL, $random));
         $this->random = $random;
     }
 } 

@@ -1,5 +1,6 @@
 <?php namespace Kirschbaum\DrupalBehatRemoteAPIDriver\Drivers;
 
+use Drupal\Component\Utility\Random;
 use Kirschbaum\DrupalBehatRemoteAPIDriver\Client;
 use Kirschbaum\DrupalBehatRemoteAPIDriver\Exception\RuntimeException;
 use Drupal\Driver\BaseDriver;
@@ -19,6 +20,11 @@ class DrupalBehatRemoteApiDriver extends BaseDriver {
      * @var DrupalRemoteClient
      */
     private $drupal_remote_client;
+
+    /**
+     * @var Random
+     */
+    private $random;
 
     /**
      * @var Remote Site Username
@@ -61,9 +67,10 @@ class DrupalBehatRemoteApiDriver extends BaseDriver {
     private $custom_formatter_class;
 
 
-    public function __construct(DrupalRemoteClient $drupal_remote_client = null)
+    public function __construct(DrupalRemoteClient $drupal_remote_client = NULL, Random $drupal_random = NULL)
     {
         $this->drupal_remote_client = $drupal_remote_client;
+        $this->random = $drupal_random;
     }
 
     /**
@@ -238,6 +245,14 @@ class DrupalBehatRemoteApiDriver extends BaseDriver {
         //  @TODO - Make logging optional
         $drupalRemoteClient->logging();
         return $drupalRemoteClient;
+    }
+
+    public function getRandom() {
+        return $this->random;
+    }
+
+    public function clearStaticCaches() {
+        // Be very very quiet.
     }
 
 }

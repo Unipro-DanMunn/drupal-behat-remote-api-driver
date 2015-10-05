@@ -1,16 +1,16 @@
 <?php namespace Kirschbaum\DrupalBehatRemoteAPIDriver;
 
-use Drupal\DrupalExtension\Extension;
+use Drupal\DrupalExtension\ServiceContainer\DrupalExtension as Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\Loader\YamlFileLoader,
     Symfony\Component\Config\FileLocator,
     Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 
-use Behat\Behat\Extension\ExtensionInterface;
+use Behat\Testwork\ServiceContainer\Extension as ExtensionInterface;
 
 class DrupalRemoteExtension extends Extension {
 
-    public function load(array $config, ContainerBuilder $container) {
+    public function load(ContainerBuilder $container, array $config) {
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/config'));
         $loader->load('services.yml');
@@ -34,7 +34,7 @@ class DrupalRemoteExtension extends Extension {
      * @param ArrayNodeDefinition $builder
      *   ArrayNodeDefinition instance.
      */
-    public function getConfig(ArrayNodeDefinition $builder) {
+    public function configure(ArrayNodeDefinition $builder) {
         $builder->
         children()->
         arrayNode('basic_auth')->
