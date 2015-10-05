@@ -1,5 +1,5 @@
 {
-    "name": "maxparkerunipro/drupal-behat-remote-api-driver",
+    "name": "unipro-danmunn/drupal-behat-remote-api-driver",
     "description": "Driver for remote Behat testing with Drupal",
     "license": "MIT",
     "authors": [
@@ -25,7 +25,7 @@
         "behat/mink-browserkit-driver": "1.2.*@dev",
         "behat/mink-extension": "v2.0.1",
         "fabpot/goutte": "~1.0",
-        "drupal/drupal-extension": "*",
+        "drupal/drupal-extension": "~3.0",
         "monolog/monolog": "1.12.*@dev"
     },
     "require-dev": {
